@@ -24,6 +24,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;	
 import javax.swing.JPanel;
 
+import javax.swing.JScrollBar;
 import javax.swing.JButton;
 import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
@@ -41,6 +42,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.event.AdjustmentListener;
+import java.awt.event.AdjustmentEvent;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -77,12 +80,6 @@ class TogetherPanel extends JPanel //implements ActionListener//, MouseListener
 	private String name;
 	private JTextArea message;
 	private CardLayout cards;
-	private JPanel introPanel; // Panel for intro page
-	private JPanel homePanel; // Panel for home page
-	private JPanel picturePanel; // Panel for picture page
-	private JPanel picturePage1Panel; // Panel for person 1 page
-	private JPanel picturePage2Panel; // Panel for person 2 page
-	private JPanel drawPanel; // Panel for drawing
 	private IntroPage ip;
 	private HomePage hp;
 	private PicturePage  pp;
@@ -91,10 +88,20 @@ class TogetherPanel extends JPanel //implements ActionListener//, MouseListener
 	private DrawPage dp;
 	private Container con;
 	private JButton buttonName;
+	private JScrollBar scroller;
 	private Color color;
 	private JCheckBox understand;
 	private boolean rectDraw;
 	private boolean ovalDraw;
+	private JRadioButton info; 
+	private JRadioButton create;
+	private int red;
+	private int green;
+	private int blue;
+	private int size;
+	private JSlider slider1;
+	private JSlider slider2;
+	private JSlider slider3;
 
 	public TogetherPanel()
 	{
@@ -106,22 +113,18 @@ class TogetherPanel extends JPanel //implements ActionListener//, MouseListener
 		image = null;
 		imageName = new String("wedding.jpg");
 		button = new JButton("home");
+		scroller = new JScrollBar(JScrollBar.VERTICAL, 10, 30, 10, 100);
+		scroller.setValue(30);
 		bg = new ButtonGroup();
 		name = new String("");
 		message = new JTextArea();
 		getMyImage();
-		introPanel = new JPanel();
-		homePanel = new JPanel();
-		picturePanel = new JPanel();
-		picturePage1Panel = new JPanel();
-		picturePage2Panel = new JPanel();
-		drawPanel = new JPanel();
-		ip = new IntroPage();
-		add(ip, "IntroPage");
-		cards.next(this);
-		hp = new HomePage();
-		add(hp, "HomePage");
-		//pp = new PicturePage();
+		//ip = new IntroPage(); // IntroPage class is all done
+		//add(ip, "IntroPage"); 
+		//cards.next(this);
+		//hp = new HomePage();
+		//add(hp, "HomePage");
+		//pp = new PicturePage(); // PicturePage class is all done
 		//add(pp, "PicturePage");
 		//person1 = new PicturePage1();
 		//add(person1, "PicturePage1");
@@ -129,13 +132,6 @@ class TogetherPanel extends JPanel //implements ActionListener//, MouseListener
 		//add(person2, "PicturePage2");
 		//dp = new DrawPage();
 		//add(dp, "DrawPage");
-		//con = frame.getContentPane();
-		//cards.last(this);
-		con = new Container();
-		//add(con);
-		//addActionListener(this);
-		//addMouseListener(this);
-		//color = new Color(red, green, blue);
 	}
 	
 	// Gets my image file for couples are JaLisa E. Jefferson and Cory Jefferson.
@@ -170,7 +166,7 @@ class TogetherPanel extends JPanel //implements ActionListener//, MouseListener
 		{
 			setLayout(null);
 			setBackground(Color.PINK);
-			JTextField name = new JTextField("Name", 30);
+			JTextField name = new JTextField("Enter your name", 30);
 			name.setBounds(300, 50, 200, 50);
 			add(name);
 
@@ -213,12 +209,13 @@ class TogetherPanel extends JPanel //implements ActionListener//, MouseListener
 	{
 		public HomePage()
 		{
-			setLayout(new FlowLayout() );
+			setLayout(new BorderLayout() );
+			
 			JLabel label = new JLabel("Welcome " + name);
 			Font ft = new Font("Arial", Font.BOLD, 40);
 			label.setFont(ft);
-			//getContentPane().add(label);
 			label.setBounds(10,0,  500,100);
+			add(label, BorderLayout.NORTH);
 
 			JTextArea ins = new JTextArea("Intro:", 10, 30);
 			ins.setText("Welcome to PutItTogether.java\n\nIf you understand"
@@ -233,28 +230,32 @@ class TogetherPanel extends JPanel //implements ActionListener//, MouseListener
 			ins.setLineWrap(true);
 			ins.setWrapStyleWord(true);
 			ins.setBounds(100, 200, 600, 450);
-
-			JLabel select = new JLabel("Please select which page you" +
-				" would like to see.");
-			label.setFont(ft);
-			label.setBounds(10, 450, 10, 800);
+			//add(ins, BorderLayout.NORTH);
 
 			JScrollPane scroller = new JScrollPane(ins);
 			scroller.setBounds(100, 200, 600, 350);
 			add(scroller);
+			setLayout(new GridLayout(3, 1) );
 	
-			JRadioButton info = new JRadioButton("To see information about friend and me.");	// construct button  
+			JLabel select = new JLabel("Please select which page you" +
+				" would like to see.");
+			label.setFont(ft);
+			label.setBounds(10, 450, 10, 800);
+			add(select);
+			
+			info = new JRadioButton("To see information about friend and me.");	// construct button  
 			bg.add(info);					// add button to panel	
-			info.setBounds(10, 550, 10, 100);
+			info.setBounds(10, 550, 10, 50);
 			RButton1Listener rb1 = new RButton1Listener(); // add listener to JRadioButton
 			info.addActionListener(rb1); // add JRadioButton to Panel 	
+			add(info, BorderLayout.CENTER);
 	
-			JRadioButton create = new JRadioButton("To make some colors and draw some shapes.");	// construct button  
+			create = new JRadioButton("To make some colors and draw some shapes.");	// construct button  
 			bg.add(create);		// add b2utton to panel	
-			create.setBounds(10, 650, 10, 200);
+			create.setBounds(10, 650, 10, 50);
 			RButton2Listener rb2 = new RButton2Listener();
 			create.addActionListener(rb2); 		// add listener to button
-			homePanel.add(create);
+			add(create, BorderLayout.SOUTH);
 		}
 		
 	}
@@ -285,7 +286,7 @@ class TogetherPanel extends JPanel //implements ActionListener//, MouseListener
 		{
 			super.paintComponent ( g );
 			getMyImage();
-			g.drawImage(image, 200, 200, 500, 400, this);
+			g.drawImage(image, 50, 45, 700, 700, this);
 		}
 		
 		public void mousePressed(MouseEvent evt)
@@ -306,20 +307,24 @@ class TogetherPanel extends JPanel //implements ActionListener//, MouseListener
 	// The page shows a person's info with the picture.
 	class PicturePage1 extends JPanel
 	{
+
 		public PicturePage1()
 		{
+			setLayout(new GridLayout(2, 1) );
+			//setLayout(new GridLayout(1, 2) );
 			buttonName = new JButton("<html> <center> See info for <br>" +
 				"the other person </center> </html>");
 			add(buttonName);
+			setLayout(new GridLayout(6, 1) ); 
 			JLabel name = new JLabel("Name: JaLisa E. Jefferson\n");
-			add(name);
+			add(name, BorderLayout. SOUTH);
 			JLabel birthDate = new JLabel("Birth date: March 13, 1982\n");
-			add(birthDate);
+			add(birthDate, BorderLayout. SOUTH);
 			JLabel age = new JLabel("Age: 39\n");
-			add(age);
+			add(age, BorderLayout. SOUTH);
 			JLabel hobbies = new JLabel("Hobbies: Playing games, Reading,"
 				+ " Cooking and Hiking");
-			add(hobbies);
+			add(hobbies, BorderLayout. SOUTH);
 			add(button, BorderLayout.SOUTH);
 		}
 
@@ -327,7 +332,7 @@ class TogetherPanel extends JPanel //implements ActionListener//, MouseListener
 		{
 			super.paintComponent ( g );
 			getMyImage();
-			g.drawImage(image, 200, 100, 300, 300, 212, 185, 362, 872, this);
+			g.drawImage(image, 0, 0, 400, 400, 212, 185, 362, 872, this);
 		}
 	}
 
@@ -336,18 +341,24 @@ class TogetherPanel extends JPanel //implements ActionListener//, MouseListener
 	{
 		public PicturePage2()
 		{
+			setLayout(new BorderLayout() );
 			buttonName = new JButton("<html> <center> See info for <br>" +
 				"the other person </center> </html>");
-			add(buttonName);
+			add(buttonName, BorderLayout.EAST);
 			JLabel name = new JLabel("Name: Cory Jefferson");
+			//picturePage2Panel.setPreferredSize(50, 150);
 			add(name);
+			
 			JLabel birthDate = new JLabel("Birth date: April 3, 1988");
 			add(birthDate);
+			
 			JLabel age = new JLabel("Age: 33");
 			add(age);
+			
 			JLabel hobbies = new JLabel("Hobbies: Hiking, Cooking,"
 				+ " playing in beach, and hang out with friends");
 			add(hobbies);
+
 			add(button, BorderLayout.SOUTH);
 		}
 
@@ -355,7 +366,7 @@ class TogetherPanel extends JPanel //implements ActionListener//, MouseListener
 		{
 			super.paintComponent ( g );
 			getMyImage();
-			g.drawImage(image, 200, 100, 300, 300, 333, 62, 591, 888, this);
+			g.drawImage(image, 0, 0, 400, 400, 333, 62, 591, 888, this);
 		}
 	}
 
@@ -363,19 +374,21 @@ class TogetherPanel extends JPanel //implements ActionListener//, MouseListener
 	// what color(s) to use with sliders.
 	class DrawPage extends JPanel
 	{
+		private JPanel leftPanel;
+		private RightPanel rightPanel;
 		
+
 		public DrawPage()
 		{
 			setLayout(new GridLayout(1, 2) );
 			drawPicture();
-			add(button, BorderLayout.SOUTH);
 			drawPanel();
 		}
 
 		public void drawPicture()
 		{
-			JPanel leftPanel = new JPanel();
-			//leftPanel.setLayout(new FlowLayout() );
+			leftPanel = new JPanel();
+			leftPanel.setLayout(new GridLayout(4, 1) );
 			JMenuBar bar = new JMenuBar();
 			JMenu shapes = new JMenu("Shapes");
 			JMenuItem rect = new JMenuItem("Rectangle");
@@ -389,126 +402,61 @@ class TogetherPanel extends JPanel //implements ActionListener//, MouseListener
 			shapes.add(oval);
 
 			bar.add(shapes);
-			add(bar);
+			leftPanel.add(bar, BorderLayout.NORTH);
 			JLabel red = new JLabel("Red");
 			red.setFont(new Font("Serif", Font.BOLD, 20));
-			add(red);
-			JSlider slider1 = new JSlider(0, 255, 255, 255);
-			slider1.setMajorTickSpacing(5);	// create tick marks on slider every 5 units
+			leftPanel.add(red);
+			slider1 = new JSlider(0, 0, 255, 255);
+			slider1.setMajorTickSpacing(25);	// create tick marks on slider every 5 units
 			slider1.setPaintTicks(true);
-			slider1.setLabelTable( slider1.createStandardLabels(5) ); // create labels on tick marks
+			slider1.setLabelTable( slider1.createStandardLabels(75) ); // create labels on tick marks
 			slider1.setPaintLabels(true);
 			slider1.setOrientation(JSlider.HORIZONTAL);
 			SliderListener slistener1 = new SliderListener();
 			slider1.addChangeListener(slistener1);
-			add(slider1);
+			leftPanel.add(slider1);
 
 			JLabel green = new JLabel("Green");
 			green.setFont(new Font("Serif", Font.BOLD, 20));
-			add(green);
-			JSlider slider2 = new JSlider(0, 0, 255, 0);
-			slider2.setMajorTickSpacing(5);	// create tick marks on slider every 5 units
+			leftPanel.add(green);
+			slider2 = new JSlider(0, 0, 255, 0);
+			slider2.setMajorTickSpacing(25);	// create tick marks on slider every 5 units
 			slider2.setPaintTicks(true);
-			slider2.setLabelTable( slider2.createStandardLabels(5) ); // create labels on tick marks
+			slider2.setLabelTable( slider2.createStandardLabels(75) ); // create labels on tick marks
 			slider2.setPaintLabels(true);
 			slider2.setOrientation(JSlider.HORIZONTAL);
 			SliderListener2 slistener2 = new SliderListener2();
 			slider2.addChangeListener(slistener2);
-			add(slider2);
+			leftPanel.add(slider2);
 
 			JLabel blue = new JLabel("Blue");
 			blue.setFont(new Font("Serif", Font.BOLD, 20));
-			add(blue);
-			JSlider slider3 = new JSlider(0, 255, 255, 255);
-			slider3.setMajorTickSpacing(5);	// create tick marks on slider every 5 units
+			leftPanel.add(blue);
+			slider3 = new JSlider(0, 0, 255, 255);
+			slider3.setMajorTickSpacing(25);	// create tick marks on slider every 5 units
 			slider3.setPaintTicks(true);
-			slider3.setLabelTable( slider3.createStandardLabels(5) ); // create labels on tick marks
+			slider3.setLabelTable( slider3.createStandardLabels(75) ); // create labels on tick marks
 			slider3.setPaintLabels(true);
 			slider3.setOrientation(JSlider.HORIZONTAL);
 			SliderListener3 slistener3 = new SliderListener3();
 			slider3.addChangeListener(slistener3);
-			add(slider3);
+			leftPanel.add(slider3);
+			add(leftPanel);
 		}
 
 		public void drawPanel()
 		{
-			JPanel rightPanel = new JPanel();
-			rightPanel.setLayout(new FlowLayout() );
-			JScrollPane scroller = new JScrollPane(rightPanel);
-			scroller.setBounds(475, 70, 25, 100);
-			add(scroller);
+			rightPanel = new RightPanel();
+			rightPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 450, 100) );
+			ScrollerListener scrollListener = new ScrollerListener();
+			scroller.addAdjustmentListener(scrollListener);
+			rightPanel.add(scroller);
+			//rightPanel.add(button);
+			add(rightPanel);
 		}
 
 		/// Need 2 variables for adjusting size
-		public void paintComponent(Graphics g)
-		{
-			super.paintComponent ( g );
-			int xvalue = 50;
-			int yvalue = 50;
-			JPanel rightPanel = new JPanel();
-			rightPanel.setLayout(new FlowLayout() );
-			JScrollPane scroller = new JScrollPane(rightPanel);
-			scroller.setBounds(0, 100, 25, 100);
-			add(scroller);
-			//xvalue = ;
-			if(rectDraw)
-			{
-				g.fillRect(xvalue, yvalue, 100, 100);
-				System.out.println("Hello");
-				repaint();
-			}
-			else if(ovalDraw)
-			{
-				g.fillOval(xvalue, yvalue, 100, 100);
-				repaint();
-			}
-			//System.out.println(rectDraw);
-			//System.out.println(ovalDraw);
-		}
 	} 
-		
-	class UnderstandListener implements ActionListener
-	{
-		public void actionPerformed(ActionEvent evt)
-		{
-			//Container next = new Container();
-
-			String command = evt.getActionCommand();
-			if(command.equals("home") )
-			{
-				understand.setSelected(true);
-				//cards.show(hp, "HomePage");  
-				cards.next(con);
-				//System.out.println("Hello");
-			}
-		}	
-	} 
-
-	class RButton1Listener implements ActionListener
-	{
-		public void actionPerformed(ActionEvent evt)
-		{
-			String command = evt.getActionCommand();
-			if(command.equals("To see information  about friend and me.") )
-			{
-				cards.next(con);
-				//cards.show(pp, "PicturePage");  
-			}
-		}
-	}
-
-	class RButton2Listener implements ActionListener
-	{
-		public void actionPerformed(ActionEvent evt)
-		{
-			String command = evt.getActionCommand();
-			if(command.equals("To make some colors and draw some shapes.") )
-			{
-				cards.next(con);
-				//cards.show(dp, "DrawPage");  
-			}
-		}
-	}
 
 	class ShapeMenuHandler implements ActionListener
 	{
@@ -525,6 +473,74 @@ class TogetherPanel extends JPanel //implements ActionListener//, MouseListener
 				ovalDraw = true;
 				rectDraw = false;
 			}
+			repaint();
+		}
+		
+	}
+
+	class RightPanel extends JPanel
+	{
+
+		public void paintComponent(Graphics g)
+		{
+			super.paintComponent ( g );
+			g.setColor(new Color(red, green, blue) );
+			if(rectDraw)
+			{
+				g.fillRect(0, 100, size, size);
+				repaint();
+		
+			}
+			else if(ovalDraw)
+			{
+				g.fillOval(0, 100, size, size);
+				repaint();
+			}
+		}
+	}
+	
+	class UnderstandListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent evt)
+		{
+			//Container next = new Container();
+
+			String command = evt.getActionCommand();
+			if(command.equals("I understand it") )
+			{
+				understand.setSelected(true);
+				cards.show(hp, "HomePage");  
+				//cards.next(homePanel);
+				//System.out.println("Hello");
+			}
+		}	
+	} 
+
+	class RButton1Listener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent evt)
+		{
+			String command = evt.getActionCommand();
+			if(command.equals("To see information  about friend and me.") )
+			{
+				info.setSelected(true);
+				//cards.next(picturePanel);
+				cards.show(pp, "PicturePage");  
+			}
+		}
+	}
+
+	class RButton2Listener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent evt)
+		{
+			String command = evt.getActionCommand();
+			if(command.equals("To make some colors and draw some shapes.") )
+			{
+				create.setSelected(true);
+				//cards.next(drawPanel);
+				cards.show(dp, "DrawPage");  
+			}
 		}
 	}
 
@@ -532,7 +548,7 @@ class TogetherPanel extends JPanel //implements ActionListener//, MouseListener
 	{
 		public void stateChanged (ChangeEvent evt) 
 		{
-			setBackground(color);
+			red = slider1.getValue();
 		}
 	}
 
@@ -540,7 +556,7 @@ class TogetherPanel extends JPanel //implements ActionListener//, MouseListener
 	{
 		public void stateChanged (ChangeEvent evt) 
 		{
-			setBackground(color);
+			green = slider2.getValue();
 		}
 	}
 
@@ -548,7 +564,15 @@ class TogetherPanel extends JPanel //implements ActionListener//, MouseListener
 	{
 		public void stateChanged (ChangeEvent evt) 
 		{
-			setBackground(color);
+			blue = slider3.getValue();
+		}
+	}
+
+	class ScrollerListener implements AdjustmentListener
+	{
+		public void adjustmentValueChanged(AdjustmentEvent evt)
+		{
+			size = scroller.getValue();
 		}
 	}
 }
